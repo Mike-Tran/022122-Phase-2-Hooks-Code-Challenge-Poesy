@@ -1,8 +1,19 @@
 import React, { useState } from 'react';
 
-function Poem({poem}) {
+const poemAPI = "http://localhost:8004/poems";
+
+function Poem({poem, removePoem, addToFavorites}) {
   const {title, content, author} = poem;
   const [isRead, setIsRead] = useState(false)
+
+  function onDeleteClick(e) {
+    e.preventDefault();
+    fetch(`${poemAPI}/${poem.id}`, {
+      method: "DELETE",
+    });
+
+    removePoem(poem);
+  }
 
   return (
     <div>
@@ -11,8 +22,16 @@ function Poem({poem}) {
       <p>
         <strong>- By {author}</strong>
       </p>
-      <button 
-        onClick={() => setIsRead(!isRead)} >Mark as {isRead ? "unread" : "read" }
+      <button onClick={() => setIsRead(!isRead)} >
+        Mark as {isRead ? "unread" : "read" }
+      </button>
+
+      <button onClick={onDeleteClick} >
+        Delete
+      </button>
+
+      <button onClick={() => addToFavorites(poem, !poem.isFavorite)}>
+        {poem.isFavorite ? "♥ Favorite" : "Unfavorite" }
       </button>
     </div>
   );
