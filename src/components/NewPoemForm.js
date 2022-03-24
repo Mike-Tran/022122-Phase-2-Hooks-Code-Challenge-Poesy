@@ -15,13 +15,17 @@ function NewPoemForm({addPoem}) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: title,
-        content: content,
-        author: author,
+        title,
+        content,
+        author,
       }),
     })
       .then((r) => r.json())
       .then((newPoem) => addPoem(newPoem));
+
+    setTitle("");
+    setContent("");
+    setAuthor("");
   }
 
   return (
@@ -45,7 +49,10 @@ function NewPoemForm({addPoem}) {
         onChange={(e) => setContent(e.target.value)}
       />
       
-      <input type="submit" value="Share your masterpiece" />
+      <input 
+        type="submit" 
+        value="Share your masterpiece" 
+      />
     </form>
   );
 }

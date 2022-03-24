@@ -11,7 +11,6 @@ function Poem({poem, removePoem, addToFavorites}) {
     fetch(`${poemAPI}/${poem.id}`, {
       method: "DELETE",
     });
-
     removePoem(poem);
   }
 
@@ -30,8 +29,8 @@ function Poem({poem, removePoem, addToFavorites}) {
         Delete
       </button>
 
-      <button onClick={() => addToFavorites(poem, !poem.isFavorite)}>
-        {poem.isFavorite ? "♥ Favorite" : "Unfavorite" }
+      <button onClick={() => addToFavorites(poem)}>
+        {poem.isFavorite ? "Unfavorite" : "♥ Favorite" }
       </button>
     </div>
   );

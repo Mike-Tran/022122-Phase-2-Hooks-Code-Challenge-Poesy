@@ -9,6 +9,7 @@ function App() {
   const [poems, setPoems] = useState([]);
   const [formVisible, setFormVisible] = useState(true);
   const [favoriteVisible, setFavoriteVisible] = useState(true);
+  const poemsToDisplay = poems.filter((poem) => favoriteVisible || poem.isFavorite);
 
   useEffect(() => {
     fetch(poemAPI)
@@ -24,15 +25,26 @@ function App() {
     setPoems(poems.filter(poem => poem.id !== poemToRemove.id))
   }
 
-  function addToFavorites(favoritePoem, isFav) {
+  function addToFavorites(favPoem) {
     setPoems(poems.map(poem => {
-      return poem.id === favoritePoem.id ? {...favoritePoem, isFavorite: isFav} : poem
+      return poem.id === favPoem.id ? {...favPoem, isFavorite: !favPoem.isFavorite} : poem
       }  
     ))
   }
 
-
-  const poemsToDisplay = poems.filter((poem) => favoriteVisible || poem.isFavorite);
+  function renderPoemView() {
+    if (poemsToDisplay.length === 0 && !favoriteVisible) {
+      return (<h1>You have no favorites added</h1>)
+    } else {
+      return (
+        <PoemsContainer 
+          poems={poemsToDisplay} 
+          removePoem={removePoem} 
+          addToFavorites={addToFavorites}
+        />
+      )
+    }
+  }
 
   return (
     <div className="app">
@@ -43,22 +55,11 @@ function App() {
         </button>
         {formVisible ? <NewPoemForm addPoem={addPoem} /> : null}
 
-      <button onClick={() => setFavoriteVisible(!favoriteVisible)} >
-        Show/hide Favorite Poems
-      </button>
-
+        <button onClick={() => setFavoriteVisible(!favoriteVisible)} >
+          Show/hide Favorite Poems
+        </button>
       </div>
-
-      {(poemsToDisplay.length === 0 && !favoriteVisible) ?
-        <h1>You have no favorites added</h1> :
-        <PoemsContainer 
-        poems={poemsToDisplay} 
-        removePoem={removePoem} 
-        addToFavorites={addToFavorites}
-        />
-      }
-
-
+      {renderPoemView()}
     </div>
   );
 }
